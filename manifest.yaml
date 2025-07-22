@@ -1,18 +1,18 @@
 version: 0.0.7
 type: plugin
 author: wangfeng
-name: popo_open_platform
+name: popo_open_platform_callback
 label:
-  en_US: popo_open_platform
-  ja_JP: popo_open_platform
-  zh_Hans: popo开放平台
-  pt_BR: popo_open_platform
+  en_US: popo_open_platform_callback
+  ja_JP: popo_open_platform_callback
+  zh_Hans: POPO开放平台回调
+  pt_BR: popo_open_platform_callback
 description:
-  en_US: popo开放平台插件，目前支持调用工具发送POPO消息。
-  ja_JP: popo开放平台插件，目前支持调用工具发送POPO消息。
-  zh_Hans: popo开放平台插件，目前支持调用工具发送POPO消息。
-  pt_BR: popo开放平台插件，目前支持调用工具发送POPO消息。
-icon: popo-tool.ico
+  en_US: 用于暴露端点给POPO开放平台，可订阅POPO机器人的消息转发给智能体。
+  ja_JP: 用于暴露端点给POPO开放平台，可订阅POPO机器人的消息转发给智能体。
+  zh_Hans: 用于暴露端点给POPO开放平台，可订阅POPO机器人的消息转发给智能体。
+  pt_BR: 用于暴露端点给POPO开放平台，可订阅POPO机器人的消息转发给智能体。
+icon: popo-callback.ico
 resource:
   memory: 268435456
   permission:
@@ -38,8 +38,6 @@ resource:
 plugins:
   endpoints:
     - group/popo_application_bot_endpoints.yaml
-  tools:
-    - provider/popo_platform.yaml
 meta:
   version: 0.0.1
   arch:
