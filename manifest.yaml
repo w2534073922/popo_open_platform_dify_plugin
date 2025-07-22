@@ -5,7 +5,7 @@ name: popo_open_platform
 label:
   en_US: popo_open_platform
   ja_JP: popo_open_platform
-  zh_Hans: popo开放平台
+  zh_Hans: POPO开放平台
   pt_BR: popo_open_platform
 description:
   en_US: popo开放平台插件，目前支持调用工具发送POPO消息。
@@ -36,8 +36,6 @@ resource:
       enabled: true
       size: 1048576
 plugins:
-  endpoints:
-    - group/popo_application_bot_endpoints.yaml
   tools:
     - provider/popo_platform.yaml
 meta:
