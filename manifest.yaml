@@ -1,0 +1,55 @@
+version: 0.0.7
+type: plugin
+author: wangfeng
+name: popo_open_platform
+label:
+  en_US: popo_open_platform
+  ja_JP: popo_open_platform
+  zh_Hans: popo开放平台
+  pt_BR: popo_open_platform
+description:
+  en_US: popo开放平台插件，目前支持调用工具发送POPO消息。
+  ja_JP: popo开放平台插件，目前支持调用工具发送POPO消息。
+  zh_Hans: popo开放平台插件，目前支持调用工具发送POPO消息。
+  pt_BR: popo开放平台插件，目前支持调用工具发送POPO消息。
+icon: popo-tool.ico
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: false
+    model:
+      enabled: false
+      llm: false
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+    node:
+      enabled: false
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+plugins:
+  endpoints:
+    - group/popo_application_bot_endpoints.yaml
+  tools:
+    - provider/popo_platform.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.1.3
+created_at: 2025-07-22T19:14:35.8757911+08:00
+privacy: PRIVACY.md
+verified: false

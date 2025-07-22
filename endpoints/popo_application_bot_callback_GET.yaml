@@ -1,0 +1,5 @@
+path: "/popo_application_bot_callback"
+method: "GET"
+extra:
+  python:
+    source: "endpoints/popo_application_bot_callback.py"

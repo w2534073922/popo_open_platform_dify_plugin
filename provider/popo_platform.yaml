@@ -1,0 +1,18 @@
+identity:
+  author: wangfeng
+  name: popo_tool
+  label:
+    en_US: POPO开放平台
+    zh_Hans: POPO开放平台
+    pt_BR: POPO开放平台
+  description:
+    en_US: wb.wangfeng07@mesg.corp.netease.com
+    zh_Hans: wb.wangfeng07@mesg.corp.netease.com
+    pt_BR: wb.wangfeng07@mesg.corp.netease.com
+  icon: popo-tool.ico
+tools:
+  - tools/popo_application_bot.yaml
+  - tools/popo_custom_bot.yaml
+extra:
+  python:
+    source: provider/popo_platform.py

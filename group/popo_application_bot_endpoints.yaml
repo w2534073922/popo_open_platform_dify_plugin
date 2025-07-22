@@ -1,0 +1,108 @@
+settings:
+  - name: token
+    type: secret-input
+    required: true
+    label:
+      en_US: token
+      zh_Hans: token
+      pt_BR: token
+    placeholder:
+      en_US: 请输入你的 POPO机器人token
+      zh_Hans: 请输入你的 POPO机器人token
+      pt_BR: 请输入你的 POPO机器人token
+  - name: aesKey
+    type: secret-input
+    required: true
+    label:
+      en_US: aesKey
+      zh_Hans: aesKey
+      pt_BR: aesKey
+    placeholder:
+      en_US: 请输入你的 POPO机器人aesKey
+      zh_Hans: 请输入你的 POPO机器人aesKey
+      pt_BR: 请输入你的 POPO机器人aesKey
+#  - name: isAutoReply
+#    type: boolean
+#    required: true
+#    label:
+#      en_US: 是否先自动答复预设消息
+#      zh_Hans: 是否先自动答复预设消息
+#      pt_BR: 是否先自动答复预设消息
+#    placeholder:
+#      en_US: 是
+#      zh_Hans: 是
+#      pt_BR: 是
+#  - name: autoReplyContent
+#    type: text-input
+#    required: false
+#    label:
+#      en_US: 自动答复的预设消息
+#      zh_Hans: 自动答复的预设消息
+#      pt_BR: 自动答复的预设消息
+#    placeholder:
+#      en_US: 处理中，请稍等...
+#      zh_Hans: 处理中，请稍等...
+#      pt_BR: 处理中，请稍等...
+  - name: agent
+    type: app-selector
+    required: true
+    scope: all
+    label:
+      en_US: 处理消息的智能体
+      zh_Hans: 处理消息的智能体
+      pt_BR: 处理消息的智能体
+    placeholder:
+      en_US: 销售档案解读大师
+      zh_Hans: 销售档案解读大师
+      pt_BR: 销售档案解读大师
+  - name: agent_type
+    type: select
+    required: true
+    options:
+      - value: "chat"
+        label:
+          zh_Hans: "聊天助手"
+          en_US: "聊天助手"
+      - value: "workflow"
+        label:
+          zh_Hans: "工作流"
+          en_US: "工作流"
+      - value: "chatflow"
+        label:
+          zh_Hans: "对话流"
+          en_US: "对话流"
+    label:
+      en_US: 应用类型（必须与绑定的智能体一致）
+      zh_Hans: 应用类型（必须与绑定的智能体一致）
+      pt_BR: 应用类型（必须与绑定的智能体一致）
+    placeholder:
+      en_US: 对话流
+      zh_Hans: 对话流
+      pt_BR: 对话流
+
+#  - name: log_reporting_address
+#    type: text-input
+#    required: false
+#    label:
+#      en_US: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
+#      zh_Hans: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
+#      pt_BR: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
+#    placeholder:
+#      en_US: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
+#      zh_Hans: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
+#      pt_BR: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
+#  - name: sleep_time
+#    type: text-input
+#    required: false
+#    label:
+#      en_US: 主线程休眠时间（可忽略，调试用）
+#      zh_Hans: 主线程休眠时间（可忽略，调试用）
+#      pt_BR: 主线程休眠时间（可忽略，调试用）
+#    placeholder:
+#      en_US: "0"
+#      zh_Hans: "0"
+#      pt_BR: "0"
+
+endpoints:
+  - endpoints/popo_application_bot_callback_GET.yaml
+  - endpoints/popo_application_bot_callback_POST.yaml
