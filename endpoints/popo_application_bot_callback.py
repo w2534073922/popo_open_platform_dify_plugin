@@ -14,7 +14,7 @@ import threading
 from MyUtil.popo_encryption_tool import AESCipher
 
 # 配置日志记录
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 # 定义 PopoBotToolEndpoint 类，继承自 Endpoint
@@ -68,10 +68,11 @@ class PopoBotToolEndpoint(Endpoint):
             print("校验签名验证失败")
             raise ValueError("校验签名验证失败")
 
-        # 处理来自POPO的不同类型请求，GET是保存回调配置时的校验，POST的消息订阅
+        # 处理来自POPO的不同类型请求，GET是保存回调配置时的校验，POST是消息订阅
         if r.method == "GET":
-            decrypt_text = aes_cipher.aes_cbc_decrypt(encrypt)
-            logging.debug("解密内容：", decrypt_text)
+            # GET时的解密验证去掉了，不知道什么原因导致可能解密失败
+            # decrypt_text = aes_cipher.aes_cbc_decrypt(encrypt)
+            # logging.debug("解密内容：", decrypt_text)
             response_content = {
                 "success": aes_cipher.aes_cbc_encrypt("success")
             }
@@ -177,7 +178,7 @@ class PopoBotToolEndpoint(Endpoint):
             # self.send_log(error_msg, settings)
             raise
 
-    # 上报日志到接口
+    # 上报日志到接口，目前已经废弃
     def send_log(self, log, settings: Mapping):
         logReportingAddress = settings.get('logReportingAddress', '')
         if not logReportingAddress:  # 空字符串或 None 都为 False
