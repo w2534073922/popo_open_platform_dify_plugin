@@ -8,10 +8,10 @@ label:
   zh_Hans: POPO开放平台
   pt_BR: popo_open_platform
 description:
-  en_US: popo开放平台插件，目前支持调用工具发送POPO消息。
-  ja_JP: popo开放平台插件，目前支持调用工具发送POPO消息。
-  zh_Hans: popo开放平台插件，目前支持调用工具发送POPO消息。
-  pt_BR: popo开放平台插件，目前支持调用工具发送POPO消息。
+  en_US: 目前支持调用工具发送POPO消息。
+  ja_JP: 目前支持调用工具发送POPO消息。
+  zh_Hans: 目前支持调用工具发送POPO消息。
+  pt_BR: 目前支持调用工具发送POPO消息。
 icon: popo-tool.ico
 resource:
   memory: 268435456
