@@ -72,9 +72,9 @@ parameters:
       zh_Hans: 自动处理图片链接
       pt_BR: 自动处理图片链接
     human_description:
-      en_US: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
-      zh_Hans: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
-      pt_BR: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
+      en_US: popo展示图片需要用特定格式：[img]http://a.com/照片.png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
+      zh_Hans: popo展示图片需要用特定格式：[img]http://a.com/照片.png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
+      pt_BR: popo展示图片需要用特定格式：[img]http://a.com/照片.png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
     llm_description: 是否自动将markdown图片链接转换为发送消息所需的格式
     form: form
 extra:

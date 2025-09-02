@@ -3,7 +3,6 @@ import logging
 import sys
 from typing import Mapping
 
-import requests
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
 import threading
@@ -11,11 +10,12 @@ import threading
 from MyUtil.popo_application_bot_util import PopoBot
 from MyUtil.popo_encryption_tool import AESCipher
 from models.popo_bot_callback_structures import dict_to_robot_event, RobotEvent, PopoEventType
-from models.popo_bot_endpoint_settings_structures import PopoBotEndpointSettings
+from models.popo_bot_endpoint_settings_structures import PopoBotEndpointSettings, GroupMessageReplyMethod, AgentType
 
-# 配置日志记录,Windows和Mac会是debug级别日志，linux是erroe级日志
-log_level = logging.DEBUG if sys.platform in ('win32', 'cygwin', 'darwin') else logging.ERROR
-logging.basicConfig(level=log_level, format="%(asctime)s - %(levelname)s - %(message)s")
+# 本地开发时，Windows和Mac会是debug级别日志
+if sys.platform in ('win32', 'cygwin', 'darwin'):
+    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 # 定义 PopoBotToolEndpoint 类，继承自 Endpoint
 class PopoBotToolEndpoint(Endpoint):
@@ -76,27 +76,31 @@ class PopoBotToolEndpoint(Endpoint):
                 logging.error(f"解密失败: {str(e)}", exc_info=True)
                 raise
             robot_event = dict_to_robot_event(callback_message)
-
-            # 预设消息
-            auto_reply_preset_message = plugin_settings.auto_reply_preset_message
-            logging.debug(f"预设消息：{auto_reply_preset_message}")
-            popo_bot = PopoBot(plugin_settings.popo_app_key, plugin_settings.popo_app_secret)
-            if auto_reply_preset_message:
-                logging.debug("开始发送预设消息")
-                popo_bot.send_message(robot_event.event_data.from_, auto_reply_preset_message, False)
-            # 转发给智能体，使用标准多线程异步调用
-            logging.debug("开始异步调用智能体")
-            app_id = plugin_settings.agent_app_id
-            thread = threading.Thread(
-                daemon=False,
-                target=self.call_agent,
-                kwargs={
-                    "plugin_settings": plugin_settings,
-                    "robot_event": robot_event,
-                    "popo_bot": popo_bot
-                }
-            )
-            thread.start()
+            if robot_event.event_type in (PopoEventType.IM_P2P_TO_ROBOT_MSG, PopoEventType.IM_CHAT_TO_ROBOT_AT_MSG):
+                # 私聊or群聊
+                if robot_event.event_type == PopoEventType.IM_P2P_TO_ROBOT_MSG:
+                    message_recipient = robot_event.event_data.from_
+                elif robot_event.event_type == PopoEventType.IM_CHAT_TO_ROBOT_AT_MSG:
+                    # 收到群@时的回复策略
+                    if plugin_settings.group_message_reply_method == GroupMessageReplyMethod.GROUP_CHAT:
+                        message_recipient = robot_event.event_data.to
+                    else:
+                        message_recipient = robot_event.event_data.from_
+                if plugin_settings.is_auto_reply:
+                    popo_bot = PopoBot(plugin_settings.popo_app_key, plugin_settings.popo_app_secret)
+                    popo_bot.send_message(message_recipient, plugin_settings.auto_reply_preset_message, True)
+                # 由于POPO方要求必须在三秒内响应，这里必须异步
+                logging.debug("开始异步调用智能体")
+                thread = threading.Thread(
+                    daemon=False,
+                    target=self.call_agent,
+                    kwargs={
+                        "plugin_settings": plugin_settings,
+                        "robot_event": robot_event,
+                        "message_recipient":message_recipient
+                    }
+                )
+                thread.start()
             return Response(
                 status=200,
             )
@@ -108,25 +112,24 @@ class PopoBotToolEndpoint(Endpoint):
             )
 
     # 反向调用智能体
-    def call_agent(self, plugin_settings: PopoBotEndpointSettings, robot_event: RobotEvent, popo_bot: PopoBot):
+    def call_agent(self, plugin_settings: PopoBotEndpointSettings, robot_event: RobotEvent,message_recipient: str):
         logging.debug("异步调用智能体开始执行")
         try:
-            # 添加参数校验
-            # if not app_id or not isinstance(app_id, str):
-            #     raise ValueError("应用id无效")
 
-            # 添加详细的参数日志
             logging.debug(f"调用智能体参数 - app_id: {plugin_settings.agent_app_id}")
-
             inputs_param = {
-                "popo_input_message": plugin_settings.workflow_input_field,  # 工作流没有默认的query参数所以需要将消息作为inputs参数
+                "popo_input_message": robot_event.event_data.notify,
                 "popo_user": robot_event.event_data.from_,
                 "popo_event_type": robot_event.event_type,
                 "popo_to": robot_event.event_data.to,
+                "popo_raw_json": robot_event.raw_json,
             }
-            logging.debug(f"应用类型：{plugin_settings.agent_type}")
-            if plugin_settings.agent_type == "chat" or plugin_settings.agent_type == "chatflow":
+            if plugin_settings.agent_type == AgentType.WORKFLOW:
+                inputs_param[plugin_settings.workflow_input_field] = robot_event.event_data.notify
 
+            logging.debug(f"应用类型：{plugin_settings.agent_type}")
+            if plugin_settings.agent_type in (AgentType.CHAT, AgentType.CHATFLOW):
+                logging.debug("准备调用 chat.invoke")
                 response = self.session.app.chat.invoke(
                     app_id=plugin_settings.agent_app_id,
                     inputs=inputs_param,
@@ -134,13 +137,14 @@ class PopoBotToolEndpoint(Endpoint):
                     response_mode="blocking",
                     conversation_id=""  # 可选，留空则创建新对话
                 )
+                logging.debug("调用 chat.invoke 完成")
                 if not response:
                     raise ValueError("来自chat.invoke的空响应")
                 else:
                     logging.debug(response)
                     agent_output = response["answer"]
 
-            elif plugin_settings.agent_type == "workflow":
+            elif plugin_settings.agent_type == AgentType.WORKFLOW:
                 response = self.session.app.workflow.invoke(
                     app_id=plugin_settings.agent_app_id,
                     inputs=inputs_param,
@@ -156,39 +160,30 @@ class PopoBotToolEndpoint(Endpoint):
 
             else:
                 raise ValueError("不支持的智能体类型")
-
-            # 自动回复
-            if plugin_settings.is_auto_reply:
-                popo_bot.send_message(robot_event.event_data.from_, agent_output)
-
-            # 工作流可能没有返回值，所以不考虑空答复的情况。
-            # answer = response.get("answer")
-            # if not answer:
-            #     raise ValueError("空的回答")
-
-            # self.send_log("异步调用智能体已返回，结果：" + answer, settings)
+            popo_bot = PopoBot(plugin_settings.popo_app_key, plugin_settings.popo_app_secret)
+            popo_bot.send_message(message_recipient, agent_output)
+            logging.debug(f"回复结束，回复对象：{message_recipient}")
 
         except Exception as e:
             error_msg = f"调用智能体失败:\n {str(e)}"
             logging.error(error_msg, exc_info=True)
             popo_bot = PopoBot(plugin_settings.popo_app_key, plugin_settings.popo_app_secret)
             popo_bot.send_message(robot_event.event_data.from_, error_msg)
-            # self.send_log(error_msg, settings)
             raise
 
     # 上报日志到接口，目前已经废弃
-    def send_log(self, log: str, settings: Mapping):
-        logReportingAddress = settings.get('logReportingAddress', '')
-        if not logReportingAddress:  # 空字符串或 None 都为 False
-            logReportingAddress = 'https://log-jystudy.app.codewave.163.com/rest/addLog'
-        # 请求体数据
-        payload = {
-            "group": "popo_bot_plugin",
-            "log": log
-        }
-
-        # 发送POST请求
-        try:
-            requests.post(logReportingAddress, data=json.dumps(payload), headers={"Content-Type": "application/json"})
-        except Exception as e:
-            logging.error(f"发送日志失败: {str(e)}", exc_info=True)
+    # def send_log(self, log: str, settings: Mapping):
+    #     logReportingAddress = settings.get('logReportingAddress', '')
+    #     if not logReportingAddress:  # 空字符串或 None 都为 False
+    #         logReportingAddress = 'https://log-jystudy.app.codewave.163.com/rest/addLog'
+    #     # 请求体数据
+    #     payload = {
+    #         "group": "popo_bot_plugin",
+    #         "log": log
+    #     }
+    #
+    #     # 发送POST请求
+    #     try:
+    #         requests.post(logReportingAddress, data=json.dumps(payload), headers={"Content-Type": "application/json"})
+    #     except Exception as e:
+    #         logging.error(f"发送日志失败: {str(e)}", exc_info=True)

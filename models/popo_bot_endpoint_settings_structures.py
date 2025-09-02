@@ -9,6 +9,10 @@ class AgentType(Enum):
     CHATFLOW = "chatflow"
     WORKFLOW = "workflow"
 
+class GroupMessageReplyMethod(Enum):
+    GROUP_CHAT = "group_chat"
+    PRIVATE_CHAT = "private_chat"
+
 
 class PopoBotEndpointSettings:
     def __init__(self, settings: Mapping):
@@ -33,6 +37,8 @@ class PopoBotEndpointSettings:
         self.popo_app_secret: Optional[str] = settings.get("popo_app_secret")
         # 自动回复时的预设消息（不填则无）
         self.auto_reply_preset_message: Optional[str] = settings.get("auto_reply_preset_message")
+        # 收到群@时的回复方式
+        self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod(settings.get("group_message_reply_method", "private_chat"))
         # 工作流类型应用的输入字段
         self.workflow_input_field: str = settings.get("workflow_input_field", "popo_input_message")
         # 工作流类型应用的输出字段
@@ -53,12 +59,12 @@ class PopoBotEndpointSettings:
                 "inputs": self.agent_inputs,
                 "type": self.selector_type,
             },
-            # 修复：将不存在的agent_type_enum改为正确的agent_type
             "agent_type": self.agent_type,
             "is_auto_reply": self.is_auto_reply,
             "popo_app_key": self.popo_app_key,
             "popo_app_secret": self.popo_app_secret,
             "auto_reply_preset_message": self.auto_reply_preset_message,
+            "group_message_reply_method": self.group_message_reply_method.value,
             "workflow_input_field": self.workflow_input_field,
             "workflow_output_field": self.workflow_output_field
         }

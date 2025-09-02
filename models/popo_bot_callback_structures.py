@@ -1,5 +1,6 @@
+import json
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import Enum
 from typing import List, Optional, Dict
 
 
@@ -137,6 +138,7 @@ class RobotEvent:
     """机器人接收的所有事件的统一结构"""
     event_type: PopoEventType  # 必选（事件类型枚举）
     event_data: P2PMessageData | P2PRecallData | GroupRecallAtData | GroupAtData  # 必选（对应事件的数据）
+    raw_json: str # 原始JSON数据
 
 
 # ------------------------------
@@ -148,6 +150,7 @@ def dict_to_robot_event(data: Dict) -> RobotEvent:
 
     注意：若接口数据缺失任何必填字段，会直接抛出KeyError或TypeError
     """
+
     event_type = PopoEventType.from_str(data["eventType"])
     event_data_dict = data["eventData"]
 
@@ -257,4 +260,4 @@ def dict_to_robot_event(data: Dict) -> RobotEvent:
     else:
         raise ValueError(f"未处理的事件类型: {event_type}")
 
-    return RobotEvent(event_type=event_type, event_data=event_data)
+    return RobotEvent(event_type=event_type, event_data=event_data,raw_json=json.dumps(data, ensure_ascii=False, indent=2))

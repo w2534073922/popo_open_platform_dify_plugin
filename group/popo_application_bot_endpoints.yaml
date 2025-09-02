@@ -122,6 +122,26 @@ settings:
       zh_Hans: 在智能体结果自动回复给popo之前先发送一条消息给用户
       pt_BR: 在智能体结果自动回复给popo之前先发送一条消息给用户
     llm_description: 自动回复时的预设消息，在智能体结果自动回复给popo之前先发送一条消息给用户
+  - name: group_message_reply_method
+    type: select
+    required: false
+    options:
+      - value: "group_chat"
+        label:
+          zh_Hans: "以私聊回复"
+          en_US: "以私聊回复"
+      - value: "private_chat"
+        label:
+          zh_Hans: "群内回复"
+          en_US: "群内回复"
+    label:
+      en_US: 收到群@时的回复方式
+      zh_Hans: 收到群@时的回复方式
+      pt_BR: 收到群@时的回复方式
+    placeholder:
+      en_US: 以私聊回复
+      zh_Hans: 以私聊回复
+      pt_BR: 以私聊回复
   - name: workflow_input_field
     type: text-input
     required: false
@@ -146,6 +166,7 @@ settings:
       en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
       zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
       pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+
 #  - name: log_reporting_address
 #    type: text-input
 #    required: false
