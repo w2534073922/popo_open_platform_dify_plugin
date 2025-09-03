@@ -98,7 +98,7 @@ settings:
         pt_BR: 机器人自动回复智能体执行结果
   - name: popo_app_key
     type: text-input
-    required: false
+    required: true
     label:
       en_US: popo机器人的appKey
       zh_Hans: popo机器人的appKey
@@ -106,7 +106,7 @@ settings:
     llm_description: 机器人的appKey
   - name: popo_app_secret
     type: text-input
-    required: false
+    required: true
     label:
       en_US: popo机器人的appSecret
       zh_Hans: popo机器人的appSecret
