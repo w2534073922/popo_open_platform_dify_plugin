@@ -22,13 +22,13 @@ class PopoBotEndpointSettings:
         self.aes_key: Optional[str] = settings.get("aesKey")
         # 处理消息的智能体
         agent_settings: Optional[Mapping[Any]] = settings.get("agent")
-        self.agent_app_id: Optional[str] = agent_settings.get("app_id") if agent_settings else None
+        self.agent_app_id: Optional[str] = agent_settings.get("app_id")
         self.agent_files: Optional[Any] = agent_settings.get("files") if agent_settings else None
         self.agent_inputs: Optional[Any] = agent_settings.get("inputs") if agent_settings else None
         self.selector_type: Optional[str] = agent_settings.get("type") if agent_settings else None
         # 应用类型（必须与绑定的智能体一致）
         agent_type_value: Optional[str] = settings.get("agent_type")
-        self.agent_type: str = AgentType(agent_type_value).value if agent_type_value else ""
+        self.agent_type: AgentType = AgentType(agent_type_value)
         # 机器人自动回复智能体执行结果
         self.is_auto_reply: bool = settings.get("is_auto_reply", False)
         # popo机器人的appKey
@@ -38,7 +38,7 @@ class PopoBotEndpointSettings:
         # 自动回复时的预设消息（不填则无）
         self.auto_reply_preset_message: Optional[str] = settings.get("auto_reply_preset_message")
         # 收到群@时的回复方式
-        self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod(settings.get("group_message_reply_method", "private_chat"))
+        self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod(settings.get("group_message_reply_method") or "private_chat")
         # 工作流类型应用的输入字段
         self.workflow_input_field: str = settings.get("workflow_input_field", "popo_input_message")
         # 工作流类型应用的输出字段
@@ -59,7 +59,7 @@ class PopoBotEndpointSettings:
                 "inputs": self.agent_inputs,
                 "type": self.selector_type,
             },
-            "agent_type": self.agent_type,
+            "agent_type": self.agent_type.value,
             "is_auto_reply": self.is_auto_reply,
             "popo_app_key": self.popo_app_key,
             "popo_app_secret": self.popo_app_secret,

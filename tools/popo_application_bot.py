@@ -14,9 +14,10 @@ class SendPopoMessageTool(Tool):
         app_secret = tool_parameters.get("popo_app_secret")
         receiver = tool_parameters.get("receiver")
         message = tool_parameters.get("message")
+        at = tool_parameters.get("at")
         auto_convert_markdown_image_link = tool_parameters.get("auto_convert_markdown_image_link")
 
         popo_bot = PopoBot(app_key, app_secret)
-        popo_bot.send_message(receiver, message, auto_convert_markdown_image_link)
+        popo_bot.send_message(receiver, message, at,auto_convert_markdown_image_link)
 
         yield self.create_text_message("")

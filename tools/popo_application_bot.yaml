@@ -38,6 +38,19 @@ parameters:
       pt_BR: 不得超过五千字符，注意限制上游的输出长度
     llm_description: 发送的消息内容
     form: llm
+  - name: at
+    type: string
+    required: false
+    label:
+      en_US: 群消息的@对象
+      zh_Hans: 群消息的@对象
+      pt_BR: 群消息的@对象
+    human_description:
+      en_US: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
+      zh_Hans: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
+      pt_BR: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
+    llm_description: 向群里推送消息时可@指定的泡泡用户，为all时代表@全体成员
+    form: llm
   - name: popo_app_key
     type: string
     required: true
