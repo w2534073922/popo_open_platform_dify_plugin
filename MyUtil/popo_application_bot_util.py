@@ -1,13 +1,13 @@
+import logging
 import re
+import sys
 from enum import Enum, auto
 import requests
 from cachetools import TTLCache, cached
 
-
 class PopoMessageReceiverType(Enum):
     USER = auto()
     GROUP = auto()
-
 
 class PopoBot:
     # 类级别的缓存，所有实例共享，实现单例缓存效果
@@ -47,7 +47,7 @@ class PopoBot:
         else:
             raise ValueError("popo消息发送错误：无效的popo用户邮箱或群号")
 
-    def send_message(self, receiver: str, message: str, auto_convert_markdown_image_link: bool = True) -> None:
+    def send_message(self, receiver: str, message: str, at: str =  None,auto_convert_markdown_image_link: bool = True) -> None:
         self.validate_receiver(receiver)
 
         if auto_convert_markdown_image_link:
@@ -62,10 +62,21 @@ class PopoBot:
         body = {
             "receiver": receiver,
             "message": {
-                "content": [{"tag": "text", "text": message}]
+                "content": [
+                    {
+                        "tag": "text",
+                        "text": message
+                    }
+                ]
             },
             "msgType": "rich_text"
         }
+
+        if at and self.validate_receiver(receiver) == PopoMessageReceiverType.GROUP:
+            body["message"]["content"][0]["text"] = "\n"+message
+            body["message"]["content"].insert(0,{"tag": "at", "email": at})
+
+        logging.debug(f"发送消息：{body}")
 
         response = requests.post(
             "https://open.popo.netease.com/open-apis/robots/v1/im/send-msg",
