@@ -1,6 +1,6 @@
 settings:
   - name: token
-    type: secret-input
+    type: text-input
     required: true
     label:
       en_US: token
@@ -11,7 +11,7 @@ settings:
       zh_Hans: 请输入你的 POPO机器人token
       pt_BR: 请输入你的 POPO机器人token
   - name: aesKey
-    type: secret-input
+    type: text-input
     required: true
     label:
       en_US: aesKey
@@ -21,28 +21,6 @@ settings:
       en_US: 请输入你的 POPO机器人aesKey
       zh_Hans: 请输入你的 POPO机器人aesKey
       pt_BR: 请输入你的 POPO机器人aesKey
-#  - name: isAutoReply
-#    type: boolean
-#    required: true
-#    label:
-#      en_US: 是否先自动答复预设消息
-#      zh_Hans: 是否先自动答复预设消息
-#      pt_BR: 是否先自动答复预设消息
-#    placeholder:
-#      en_US: 是
-#      zh_Hans: 是
-#      pt_BR: 是
-#  - name: autoReplyContent
-#    type: text-input
-#    required: false
-#    label:
-#      en_US: 自动答复的预设消息
-#      zh_Hans: 自动答复的预设消息
-#      pt_BR: 自动答复的预设消息
-#    placeholder:
-#      en_US: 处理中，请稍等...
-#      zh_Hans: 处理中，请稍等...
-#      pt_BR: 处理中，请稍等...
   - name: agent
     type: app-selector
     required: true
@@ -79,6 +57,85 @@ settings:
       en_US: 对话流
       zh_Hans: 对话流
       pt_BR: 对话流
+  - name: auto_reply_preset_message
+    type: text-input
+    required: false
+    label:
+      en_US: 自动回复时一条预设消息（不填则无）
+      zh_Hans: 自动回复一条预设消息（不填则无）
+      pt_BR: 自动回复一条预设消息（不填则无）
+    placeholder:
+      en_US: 示例：处理中，请稍等...
+      zh_Hans: 示例：处理中，请稍等...
+      pt_BR: 示例：处理中，请稍等...
+    llm_description: 自动回复时的预设消息，在智能体结果自动回复给popo之前先发送一条消息给用户
+  - name: group_message_reply_method
+    type: select
+    required: false
+    options:
+      - value: "private_chat"
+        label:
+          zh_Hans: "以私聊回复"
+          en_US: "以私聊回复"
+      - value: "group_chat"
+        label:
+          zh_Hans: "群内回复"
+          en_US: "群内回复"
+    label:
+      en_US: 收到群@时的回复方式
+      zh_Hans: 收到群@时的回复方式
+      pt_BR: 收到群@时的回复方式
+    placeholder:
+      en_US: 以私聊回复
+      zh_Hans: 以私聊回复
+      pt_BR: 以私聊回复
+  - name: is_auto_reply
+    type: boolean
+    required: true
+    label:
+        en_US: 机器人自动回复智能体执行结果
+        zh_Hans: 机器人自动回复智能体执行结果
+        pt_BR: 机器人自动回复智能体执行结果
+  - name: popo_app_key
+    type: text-input
+    required: true
+    label:
+      en_US: popo机器人的appKey
+      zh_Hans: popo机器人的appKey
+      pt_BR: popo机器人的appKey
+    llm_description: 机器人的appKey
+  - name: popo_app_secret
+    type: text-input
+    required: true
+    label:
+      en_US: popo机器人的appSecret
+      zh_Hans: popo机器人的appSecret
+      pt_BR: popo机器人的appSecret
+    llm_description: 机器人的appSecret
+  - name: workflow_input_field
+    type: text-input
+    required: false
+    default: popo_input_message
+    label:
+      en_US: 工作流类型应用的输入字段
+      zh_Hans: 工作流类型应用的输入字段
+      pt_BR: 工作流类型应用的输入字段
+    human_description:
+      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+  - name: workflow_output_field
+    type: text-input
+    required: false
+    default: popo_output_message
+    label:
+      en_US: 工作流类型应用的输出字段
+      zh_Hans: 工作流类型应用的输出字段
+      pt_BR: 工作流类型应用的输出字段
+    human_description:
+      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 
 #  - name: log_reporting_address
 #    type: text-input

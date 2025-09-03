@@ -1,49 +1,62 @@
+import logging
 import re
+import sys
 from enum import Enum, auto
-
 import requests
-
+from cachetools import TTLCache, cached
 
 class PopoMessageReceiverType(Enum):
     USER = auto()
     GROUP = auto()
 
-
-def validate_receiver(receiver: str):
-    # 邮箱格式验证正则表达式
-    email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$'
-    # 群号格式验证正则表达式，5-10位数字
-    group_pattern = r'^\d{5,10}$'
-
-    # 先尝试验证是否为邮箱格式
-    if re.match(email_pattern, receiver):
-        return PopoMessageReceiverType.USER
-    # 再尝试验证是否为群号格式
-    elif re.match(group_pattern, receiver):
-        return PopoMessageReceiverType.GROUP
-    else:
-        # 都不匹配时抛出异常
-        raise ValueError("popo消息发送错误：无效的popo用户邮箱或群号")
-
-
 class PopoBot:
+    # 类级别的缓存，所有实例共享，实现单例缓存效果
+    _token_cache = TTLCache(maxsize=200, ttl=21600)  # token缓存六个小时
 
-    def __init__(self, aes_key, app_secret):
-        self.appKey = aes_key
+    def __init__(self, app_key, app_secret):
+        self.appKey = app_key
         self.app_secret = app_secret
 
-    def send_message(self, receiver: str, message: str, auto_convert_markdown_image_link: bool = True) -> None:
+    @classmethod
+    @cached(_token_cache)  # 使用类级别的缓存
+    def get_token(cls, app_key: str, app_secret: str) -> str:
+        """类方法，所有实例共享缓存"""
+        body = {
+            "appKey": app_key,
+            "appSecret": app_secret
+        }
+        response = requests.post(
+            "https://open.popo.netease.com/open-apis/robots/v1/token",
+            json=body,
+            timeout=3
+        )
+        if response.status_code != 200 or response.json().get("errcode") != 0:
+            errmsg = response.json().get("errmsg", "未收到错误信息")
+            raise ValueError(f"popo消息发送错误：获取token失败。errmsg：{errmsg}")
+        return response.json().get("data").get("accessToken")
 
-        # 验证邮箱和群号格式
-        validate_receiver(receiver)
+    def validate_receiver(self, receiver: str) -> PopoMessageReceiverType:
+        """移到类内部作为实例方法"""
+        email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$'
+        group_pattern = r'^\d{5,10}$'
 
-        # 将markdown图片转换成popo所需的[img]xxx[/img]
+        if re.match(email_pattern, receiver):
+            return PopoMessageReceiverType.USER
+        elif re.match(group_pattern, receiver):
+            return PopoMessageReceiverType.GROUP
+        else:
+            raise ValueError("popo消息发送错误：无效的popo用户邮箱或群号")
+
+    def send_message(self, receiver: str, message: str, at: str =  None,auto_convert_markdown_image_link: bool = True) -> None:
+        self.validate_receiver(receiver)
+
         if auto_convert_markdown_image_link:
             pattern = r'!\[(.*?)]\(([^()]*(\([^()]*\)[^()]*)*)\)'
             message = re.sub(pattern, r'[img]\2[/img]', message)
 
         headers = {
             "Content-Type": "application/json",
+            # 调用类方法获取token
             "Open-Access-Token": self.get_token(self.appKey, self.app_secret)
         }
         body = {
@@ -58,7 +71,13 @@ class PopoBot:
             },
             "msgType": "rich_text"
         }
-        # 设置接口请求最大时间限制为5秒
+
+        if at and self.validate_receiver(receiver) == PopoMessageReceiverType.GROUP:
+            body["message"]["content"][0]["text"] = "\n"+message
+            body["message"]["content"].insert(0,{"tag": "at", "email": at})
+
+        logging.debug(f"发送消息：{body}")
+
         response = requests.post(
             "https://open.popo.netease.com/open-apis/robots/v1/im/send-msg",
             json=body,
@@ -66,35 +85,14 @@ class PopoBot:
             timeout=5
         )
         if response.status_code != 200 or response.json().get("errcode") != 0:
-            if response.json().get("errmsg"):
-                raise ValueError("popo消息发送错误：发送消息失败。errmsg：" + response.json().get("errmsg"))
-            else:
-                raise ValueError("popo消息发送错误：发送消息失败，未收到errmsg。")
-
-    def get_token(self, app_key: str, app_secret: str) -> str:
-
-        body = {
-            "appKey": app_key,
-            "appSecret": app_secret
-        }
-        # 添加 timeout=3 参数，设置接口请求最大时间限制为3秒
-        response = requests.post(
-            "https://open.popo.netease.com/open-apis/robots/v1/token",
-            json=body,
-            timeout=3
-        )
-        if response.status_code != 200 or response.json().get("errcode") != 0:
-            if response.json().get("errmsg"):
-                raise ValueError("popo消息发送错误：获取token失败。errmsg：" + response.json().get("errmsg"))
-            else:
-                raise ValueError("popo消息发送错误：获取token失败，未收到errmsg。")
-        accessToken = response.json().get("data").get("accessToken")
-
-        return accessToken
-
-    # 邮箱和群号格式验证
+            errmsg = response.json().get("errmsg", "未收到错误信息")
+            raise ValueError(f"popo消息发送错误：发送消息失败。errmsg：{errmsg}")
 
 
 if __name__ == '__main__':
-    popo = PopoBot("AAAAAAtesTS0sA0Z1ahHsmG", "AAAAAAuWVeeauDnmtnh5rx7QrKxblJwmWjDF684aX27AHRSmtjIOOmRjjDKW7QoBFqi")
-    popo.send_message("wb.wangfeng07@mesg.corp.netease.com", "老王真帅")
+    popo1 = PopoBot("AAA", "BBB")
+    popo2 = PopoBot("AAA", "BBB")
+
+    # 两个实例会共享同一个token缓存
+    popo1.send_message("wb.wangfeng07@mesg.corp.netease.com", "老王真帅")
+    popo2.send_message("wb.wangfeng07@mesg.corp.netease.com", "老王真帅2")
