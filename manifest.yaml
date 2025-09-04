@@ -5,7 +5,7 @@ name: popo_open_platform
 label:
   en_US: popo_open_platform
   ja_JP: popo_open_platform
-  zh_Hans: POPO开放平台
+  zh_Hans: POPO开放平台工具
   pt_BR: popo_open_platform
 description:
   en_US: 目前支持调用工具发送POPO消息。
