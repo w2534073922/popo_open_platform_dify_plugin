@@ -25,7 +25,7 @@ class PopoBotToolEndpoint(Endpoint):
             logging.debug("进入_invoke回调")
             if r.args.get("debug") == 'true' and r.args.get('signature') is None:
                 result = plugin_settings.get_desensitized_settings()
-                result({
+                result.update({
                     "endpointStatus": "端点连通性测试成功"
                 })
                 return Response(
@@ -115,7 +115,7 @@ class PopoBotToolEndpoint(Endpoint):
         except Exception as e:
             logging.error(f"invoke执行异常: {str(e)}", exc_info=True)
             return Response(
-                json.dumps({"status": "error", "message": "处理请求失败"}, ensure_ascii=False),
+                json.dumps({"status": "error", "message": "处理请求失败", "error": str(e)}, ensure_ascii=False),
                 status=500,
                 content_type="application/json; charset=utf-8"
             )
