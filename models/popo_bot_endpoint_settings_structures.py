@@ -69,6 +69,35 @@ class PopoBotEndpointSettings:
             "workflow_output_field": self.workflow_output_field
         }
 
+    def get_desensitized_settings(self) -> dict:
+        """将对象转换为字典，并对敏感信息进行脱敏处理"""
+        def desensitize(value: Optional[str], keep_chars: int = 4) -> Optional[str]:
+            """对敏感信息进行脱敏处理"""
+            if not value:
+                return value
+            if len(value) <= keep_chars * 2:
+                return "*" * len(value)
+            return value[:keep_chars] + "*" * (len(value) - keep_chars * 2) + value[-keep_chars:]
+        
+        return {
+            "token": desensitize(self.token),
+            "aes_key": desensitize(self.aes_key),
+            "agent": {
+                "app_id": self.agent_app_id,
+                "files": self.agent_files,
+                "inputs": self.agent_inputs,
+                "type": self.selector_type,
+            },
+            "agent_type": self.agent_type.value,
+            "is_auto_reply": self.is_auto_reply,
+            "popo_app_key": desensitize(self.popo_app_key),
+            "popo_app_secret": desensitize(self.popo_app_secret),
+            "auto_reply_preset_message": self.auto_reply_preset_message,
+            "group_message_reply_method": self.group_message_reply_method.value,
+            "workflow_input_field": self.workflow_input_field,
+            "workflow_output_field": self.workflow_output_field
+        }
+
     def __str__(self) -> str:
         """返回对象的JSON字符串表示"""
         return json.dumps(self.to_dict(), indent=2, ensure_ascii=False)

@@ -10,7 +10,7 @@ description:
     en_US: 调用应用机器人向popo用户发私信或群聊，需要机器人的可见范围中包括该用户。
     zh_Hans: 调用应用机器人向popo用户发私信或群聊，需要机器人的可见范围中包括该用户。
     pt_BR: 调用应用机器人向popo用户发私信或群聊，需要机器人的可见范围中包括该用户。
-  llm: 用于向popo用户发送消息
+  llm: 调用popo机器人向popo用户或群里推送消息
 parameters:
   - name: receiver
     type: string
@@ -23,7 +23,7 @@ parameters:
       en_US: popo邮箱或群号，如：6666888、zhangsan@corp.netease.com
       zh_Hans: popo邮箱或群号，如：6666888、zhangsan@corp.netease.com
       pt_BR: popo邮箱或群号，如：6666888、zhangsan@corp.netease.com
-    llm_description: 接收消息的popo邮箱账号
+    llm_description: 接收消息的popo邮箱账号或者群号
     form: llm
   - name: message
     type: string
@@ -36,7 +36,7 @@ parameters:
       en_US: 不得超过五千字符，注意限制上游的输出长度
       zh_Hans: 不得超过五千字符，注意限制上游的输出长度
       pt_BR: 不得超过五千字符，注意限制上游的输出长度
-    llm_description: 发送的消息内容
+    llm_description: 发送的消息内容，不能超过五千字符
     form: llm
   - name: at
     type: string
@@ -49,7 +49,7 @@ parameters:
       en_US: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
       zh_Hans: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
       pt_BR: 向群里推送消息时可@泡泡邮箱，为all时代表@全体成员
-    llm_description: 向群里推送消息时可@指定的泡泡用户，为all时代表@全体成员
+    llm_description: 向群里推送消息时可@指定的泡泡用户，为all时代表@全体成员，仅当消息的接收方为群号时才能@
     form: llm
   - name: popo_app_key
     type: string
