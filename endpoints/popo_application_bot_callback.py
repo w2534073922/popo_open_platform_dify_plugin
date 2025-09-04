@@ -21,12 +21,15 @@ if sys.platform in ('win32', 'cygwin', 'darwin'):
 class PopoBotToolEndpoint(Endpoint):
     def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
         try:
+            plugin_settings = PopoBotEndpointSettings(settings)
             logging.debug("进入_invoke回调")
             if r.args.get("debug") == 'true' and r.args.get('signature') is None:
+                result = plugin_settings.get_desensitized_settings()
+                result({
+                    "endpointStatus": "端点连通性测试成功"
+                })
                 return Response(
-                    json.dumps({
-                        "endpointStatus": "端点连通性校验成功"
-                    }, ensure_ascii=False),
+                    json.dumps(result, ensure_ascii=False),
                     status=200,
                     content_type="application/json; charset=utf-8"
                 )
@@ -36,13 +39,6 @@ class PopoBotToolEndpoint(Endpoint):
             nonce = r.args.get('nonce')
             encrypt = r.args.get('encrypt')  # get请求时才有这个参数
 
-            logging.debug("开始获取插件参数配置")
-            # 插件参数
-            try:
-                plugin_settings = PopoBotEndpointSettings(settings)
-            except Exception as e:
-                logging.error(f"获取插件参数失败: {str(e)}", exc_info=True)
-                raise
             logging.debug(f"settings = {plugin_settings}")
             logging.debug(f"signature = {signature}, timestamp = {timestamp}, nonce = {nonce}, encrypt = {encrypt}")
             logging.debug("开始验证POPO签名")
@@ -117,7 +113,7 @@ class PopoBotToolEndpoint(Endpoint):
                     content_type="application/json; charset=utf-8"
                 )
         except Exception as e:
-            logging.error(f"处理请求失败: {str(e)}", exc_info=True)
+            logging.error(f"invoke执行异常: {str(e)}", exc_info=True)
             return Response(
                 json.dumps({"status": "error", "message": "处理请求失败"}, ensure_ascii=False),
                 status=500,
