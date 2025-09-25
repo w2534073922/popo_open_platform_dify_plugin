@@ -1,11 +1,27 @@
 settings:
+  - name: popo_app_key
+    type: text-input
+    required: true
+    label:
+      en_US: POPO机器人的appKey
+      zh_Hans: POPO机器人的appKey
+      pt_BR: POPO机器人的appKey
+    llm_description: 机器人的appKey
+  - name: popo_app_secret
+    type: text-input
+    required: true
+    label:
+      en_US: POPO机器人的appSecret
+      zh_Hans: POPO机器人的appSecret
+      pt_BR: POPO机器人的appSecret
+    llm_description: 机器人的appSecret
   - name: token
     type: text-input
     required: true
     label:
-      en_US: token
-      zh_Hans: token
-      pt_BR: token
+      en_US: 机器人事件订阅的token
+      zh_Hans: 机器人事件订阅的token
+      pt_BR: 机器人事件订阅的token
     placeholder:
       en_US: 请输入你的 POPO机器人token
       zh_Hans: 请输入你的 POPO机器人token
@@ -14,9 +30,9 @@ settings:
     type: text-input
     required: true
     label:
-      en_US: aesKey
-      zh_Hans: aesKey
-      pt_BR: aesKey
+      en_US: 机器人事件订阅的aesKey
+      zh_Hans: 机器人事件订阅的aesKey
+      pt_BR: 机器人事件订阅的aesKey
     placeholder:
       en_US: 请输入你的 POPO机器人aesKey
       zh_Hans: 请输入你的 POPO机器人aesKey
@@ -69,26 +85,26 @@ settings:
       zh_Hans: 示例：处理中，请稍等...
       pt_BR: 示例：处理中，请稍等...
     llm_description: 自动回复时的预设消息，在智能体结果自动回复给popo之前先发送一条消息给用户
-  - name: group_message_reply_method
-    type: select
-    required: false
-    options:
-      - value: "private_chat"
-        label:
-          zh_Hans: "以私聊回复"
-          en_US: "以私聊回复"
-      - value: "group_chat"
-        label:
-          zh_Hans: "群内回复"
-          en_US: "群内回复"
-    label:
-      en_US: 收到群@时的回复方式
-      zh_Hans: 收到群@时的回复方式
-      pt_BR: 收到群@时的回复方式
-    placeholder:
-      en_US: 以私聊回复
-      zh_Hans: 以私聊回复
-      pt_BR: 以私聊回复
+#  - name: group_message_reply_method
+#    type: select
+#    required: false
+#    options:
+#      - value: "private_chat"
+#        label:
+#          zh_Hans: "以私聊回复"
+#          en_US: "以私聊回复"
+#      - value: "group_chat"
+#        label:
+#          zh_Hans: "群内回复"
+#          en_US: "群内回复"
+#    label:
+#      en_US: 收到群@时的回复方式
+#      zh_Hans: 收到群@时的回复方式
+#      pt_BR: 收到群@时的回复方式
+#    placeholder:
+#      en_US: 以私聊回复
+#      zh_Hans: 以私聊回复
+#      pt_BR: 以私聊回复
   - name: is_auto_reply
     type: boolean
     required: true
@@ -96,46 +112,30 @@ settings:
         en_US: 机器人自动回复智能体执行结果
         zh_Hans: 机器人自动回复智能体执行结果
         pt_BR: 机器人自动回复智能体执行结果
-  - name: popo_app_key
-    type: text-input
-    required: true
-    label:
-      en_US: popo机器人的appKey
-      zh_Hans: popo机器人的appKey
-      pt_BR: popo机器人的appKey
-    llm_description: 机器人的appKey
-  - name: popo_app_secret
-    type: text-input
-    required: true
-    label:
-      en_US: popo机器人的appSecret
-      zh_Hans: popo机器人的appSecret
-      pt_BR: popo机器人的appSecret
-    llm_description: 机器人的appSecret
-  - name: workflow_input_field
-    type: text-input
-    required: false
-    default: popo_input_message
-    label:
-      en_US: 工作流类型应用的输入字段
-      zh_Hans: 工作流类型应用的输入字段
-      pt_BR: 工作流类型应用的输入字段
-    human_description:
-      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-  - name: workflow_output_field
-    type: text-input
-    required: false
-    default: popo_output_message
-    label:
-      en_US: 工作流类型应用的输出字段
-      zh_Hans: 工作流类型应用的输出字段
-      pt_BR: 工作流类型应用的输出字段
-    human_description:
-      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#  - name: workflow_input_field
+#    type: text-input
+#    required: false
+#    default: popo_input_message
+#    label:
+#      en_US: 工作流类型应用的输入字段
+#      zh_Hans: 工作流类型应用的输入字段
+#      pt_BR: 工作流类型应用的输入字段
+#    human_description:
+#      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#  - name: workflow_output_field
+#    type: text-input
+#    required: false
+#    default: popo_output_message
+#    label:
+#      en_US: 工作流类型应用的输出字段
+#      zh_Hans: 工作流类型应用的输出字段
+#      pt_BR: 工作流类型应用的输出字段
+#    human_description:
+#      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
+#      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 
 #  - name: log_reporting_address
 #    type: text-input
