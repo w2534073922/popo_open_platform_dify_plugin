@@ -39,6 +39,8 @@ class PopoBotEndpointSettings:
         self.auto_reply_preset_message: Optional[str] = settings.get("auto_reply_preset_message")
         # 收到群@时的回复方式，暂时移除配置化
         self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod("group_chat")#GroupMessageReplyMethod(settings.get("group_message_reply_method") or "group_chat")
+        # 是否为对话流应用启用记忆功能
+        self.enable_memory: bool = settings.get("enable_memory", True)
         # 工作流类型应用的输入字段
         self.workflow_input_field: str = "popo_input_message"#settings.get("workflow_input_field", "popo_input_message")
         # 工作流类型应用的输出字段
@@ -65,6 +67,7 @@ class PopoBotEndpointSettings:
             "popo_app_secret": self.popo_app_secret,
             "auto_reply_preset_message": self.auto_reply_preset_message,
             "group_message_reply_method": self.group_message_reply_method.value,
+            "enable_memory": self.enable_memory,
             "workflow_input_field": self.workflow_input_field,
             "workflow_output_field": self.workflow_output_field
         }
@@ -94,6 +97,7 @@ class PopoBotEndpointSettings:
             "popo_app_secret": desensitize(self.popo_app_secret),
             "auto_reply_preset_message": self.auto_reply_preset_message,
             "group_message_reply_method": self.group_message_reply_method.value,
+            "enable_memory": self.enable_memory,
             "workflow_input_field": self.workflow_input_field,
             "workflow_output_field": self.workflow_output_field
         }

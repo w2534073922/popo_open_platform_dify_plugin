@@ -85,6 +85,22 @@ settings:
       zh_Hans: 示例：处理中，请稍等...
       pt_BR: 示例：处理中，请稍等...
     llm_description: 自动回复时的预设消息，在智能体结果自动回复给popo之前先发送一条消息给用户
+  - name: is_auto_reply
+    type: boolean
+    required: true
+    default: true
+    label:
+        en_US: 机器人自动回复智能体执行结果
+        zh_Hans: 机器人自动回复智能体执行结果
+        pt_BR: 机器人自动回复智能体执行结果
+  - name: enable_memory
+    type: boolean
+    required: true
+    default: true
+    label:
+        en_US: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
+        zh_Hans: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
+        pt_BR: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
 #  - name: group_message_reply_method
 #    type: select
 #    required: false
@@ -105,13 +121,7 @@ settings:
 #      en_US: 以私聊回复
 #      zh_Hans: 以私聊回复
 #      pt_BR: 以私聊回复
-  - name: is_auto_reply
-    type: boolean
-    required: true
-    label:
-        en_US: 机器人自动回复智能体执行结果
-        zh_Hans: 机器人自动回复智能体执行结果
-        pt_BR: 机器人自动回复智能体执行结果
+
 #  - name: workflow_input_field
 #    type: text-input
 #    required: false
