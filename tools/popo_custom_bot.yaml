@@ -54,6 +54,7 @@ parameters:
   - name: auto_convert_markdown_image_link
     type: boolean
     required: true
+    default: true
     label:
       en_US: 自动处理图片链接
       zh_Hans: 自动处理图片链接

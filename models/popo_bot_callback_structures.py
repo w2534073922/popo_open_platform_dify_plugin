@@ -1,8 +1,29 @@
 import json
+import logging
+import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 
+from dify_plugin.config.logger_format import plugin_logger_handler
+from dify_plugin.core.runtime import Session
+
+from models.popo_bot_endpoint_settings_structures import PopoBotEndpointSettings
+
+logger = logging.getLogger(__name__)
+if sys.platform in ('win32', 'cygwin', 'darwin'):
+    # 清空已有的handlers避免重复
+    logger.handlers.clear()
+    logger.setLevel(logging.DEBUG)
+    # 为开发环境创建专门的handler
+    dev_handler = logging.StreamHandler()
+    dev_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    dev_handler.setFormatter(dev_formatter)
+    logger.addHandler(dev_handler)
+    logger.propagate = False  # 防止日志向父级传播
+else:
+    logger.setLevel(logging.INFO)
+    logger.addHandler(plugin_logger_handler)
 
 # ------------------------------
 # 事件类型枚举
@@ -261,3 +282,5 @@ def dict_to_robot_event(data: Dict) -> RobotEvent:
         raise ValueError(f"未处理的事件类型: {event_type}")
 
     return RobotEvent(event_type=event_type, event_data=event_data,raw_json=json.dumps(data, ensure_ascii=False, indent=2))
+
+
