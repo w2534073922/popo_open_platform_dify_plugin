@@ -37,12 +37,14 @@ class PopoBotEndpointSettings:
         self.popo_app_secret: Optional[str] = settings.get("popo_app_secret")
         # 自动回复时的预设消息（不填则无）
         self.auto_reply_preset_message: Optional[str] = settings.get("auto_reply_preset_message")
-        # 收到群@时的回复方式
-        self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod(settings.get("group_message_reply_method") or "private_chat")
+        # 收到群@时的回复方式，暂时移除配置化
+        self.group_message_reply_method: GroupMessageReplyMethod = GroupMessageReplyMethod("group_chat")#GroupMessageReplyMethod(settings.get("group_message_reply_method") or "group_chat")
+        # 是否为对话流应用启用记忆功能
+        self.enable_memory: bool = settings.get("enable_memory", True)
         # 工作流类型应用的输入字段
-        self.workflow_input_field: str = settings.get("workflow_input_field", "popo_input_message")
+        self.workflow_input_field: str = "popo_input_message"#settings.get("workflow_input_field", "popo_input_message")
         # 工作流类型应用的输出字段
-        self.workflow_output_field: str = settings.get("workflow_output_field", "popo_output_message")
+        self.workflow_output_field: str = "popo_output_message"#settings.get("workflow_output_field", "popo_output_message")
         # 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
         # self.log_reporting_address = settings.get("logReportingAddress") or "https://log-jystudy.app.codewave.163.com/rest/addLog"
         # 主线程休眠时间（可忽略，调试用）
@@ -65,6 +67,7 @@ class PopoBotEndpointSettings:
             "popo_app_secret": self.popo_app_secret,
             "auto_reply_preset_message": self.auto_reply_preset_message,
             "group_message_reply_method": self.group_message_reply_method.value,
+            "enable_memory": self.enable_memory,
             "workflow_input_field": self.workflow_input_field,
             "workflow_output_field": self.workflow_output_field
         }
@@ -94,6 +97,7 @@ class PopoBotEndpointSettings:
             "popo_app_secret": desensitize(self.popo_app_secret),
             "auto_reply_preset_message": self.auto_reply_preset_message,
             "group_message_reply_method": self.group_message_reply_method.value,
+            "enable_memory": self.enable_memory,
             "workflow_input_field": self.workflow_input_field,
             "workflow_output_field": self.workflow_output_field
         }
