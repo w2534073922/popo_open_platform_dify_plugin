@@ -59,7 +59,7 @@ def set_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointS
     memory_content = PopoBotMemoryContent(bot_account, message_source, conversation_id, datetime.strptime(rebot_event.event_data.addtime, "%Y-%m-%d %H:%M:%S"))
     # session.storage.set(key_name, json.dumps(memory_content, ensure_ascii=False).encode('utf-8'))
     memory_dict[key_name] = memory_content
-    logger.debug(f"存入记忆成功: keyName = {key_name}, memory_content = {memory_content}")
+    logger.debug(f"存入记忆成功: keyName = {key_name}, memory_content = {memory_content.to_dict()}")
 
 
 def get_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointSettings) -> PopoBotMemoryContent | None:

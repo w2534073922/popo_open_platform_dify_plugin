@@ -1,4 +1,4 @@
-version: 1.0.3
+version: 1.1.0
 type: plugin
 author: wangfeng
 name: popo_open_platform_callback
@@ -8,10 +8,10 @@ label:
   zh_Hans: POPO开放平台回调
   pt_BR: popo_open_platform_callback
 description:
-  en_US: 目前支持订阅POPO机器人的消息转发给智能体。
-  ja_JP: 目前支持订阅POPO机器人的消息转发给智能体。
-  zh_Hans: 目前支持订阅POPO机器人的消息转发给智能体。
-  pt_BR: 目前支持订阅POPO机器人的消息转发给智能体。
+  en_US: 订阅popo开放平台的回调，可将POPO消息转发给智能体。
+  ja_JP: 订阅popo开放平台的回调，可将POPO消息转发给智能体。
+  zh_Hans: 订阅popo开放平台的回调，可将POPO消息转发给智能体。
+  pt_BR: 订阅popo开放平台的回调，可将POPO消息转发给智能体。
 icon: popo-callback.ico
 resource:
   memory: 268435456
