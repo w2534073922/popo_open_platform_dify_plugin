@@ -24,19 +24,21 @@ else:
 
 memory_dict = {}
 
-class PopoBotMemoryContent:
+class PopoBotMemory:
     def __init__(self, bot_account: str, message_source: str, conversation_id: str, last_time: datetime):
         self.bot_account = bot_account
         self.message_source = message_source
         self.conversation_id = conversation_id
         self.last_time = last_time
+        # self.last_app_id = last_app_id
 
     def to_dict(self) -> dict:
         return {
             "bot_account": self.bot_account,
             "message_source": self.message_source,
             "conversation_id": self.conversation_id,
-            "last_time": self.last_time
+            "last_time": self.last_time,
+            # "last_app_id": self.last_app_id
         }
 
     @classmethod
@@ -45,9 +47,9 @@ class PopoBotMemoryContent:
             bot_account=data["bot_account"],
             message_source=data["message_source"],
             conversation_id=data["conversation_id"],
-            last_time=data["last_time"]
+            last_time=data["last_time"],
+            # last_app_id=data["last_app_id"]
         )
-
 
 def set_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointSettings, conversation_id: str) -> None:
     if rebot_event.event_type == PopoEventType.IM_P2P_TO_ROBOT_MSG:
@@ -55,15 +57,15 @@ def set_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointS
     else:
         bot_account = rebot_event.event_data.at_list[0]
     message_source = rebot_event.event_data.session_id
-    key_name = "popobot_conversation_memory_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
-    memory_content = PopoBotMemoryContent(bot_account, message_source, conversation_id, datetime.strptime(rebot_event.event_data.addtime, "%Y-%m-%d %H:%M:%S"))
+    key_name = "popobot_conversation_memory_" + plugin_settings.agent_app_id + "_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
+    memory_content = PopoBotMemory(bot_account, message_source, conversation_id, datetime.strptime(rebot_event.event_data.addtime, "%Y-%m-%d %H:%M:%S"))
     # session.storage.set(key_name, json.dumps(memory_content, ensure_ascii=False).encode('utf-8'))
     memory_dict[key_name] = memory_content
     logger.debug(f"存入记忆成功: keyName = {key_name}, memory_content = {memory_content.to_dict()}")
 
 
-def get_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointSettings) -> PopoBotMemoryContent | None:
-    key_name = "popobot_conversation_memory_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
+def get_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointSettings) -> "PopoBotMemory | None":
+    key_name = "popobot_conversation_memory_" + plugin_settings.agent_app_id + "_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
     # memory_content_dict = session.storage.get(key_name).decode('utf-8')
     memory_content = memory_dict.get(key_name)
     if memory_content is None:
@@ -76,9 +78,9 @@ def get_popobot_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointS
 
 
 def clear_memory(rebot_event:RobotEvent, plugin_settings: PopoBotEndpointSettings) -> None:
-    key_name = "popobot_conversation_memory_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
+    key_name = "popobot_conversation_memory_" + plugin_settings.agent_app_id + "_" + plugin_settings.popo_app_key + "_" + rebot_event.event_data.session_id
     memory_dict.pop(key_name)
 
 
-def clear_all_memory(self) -> None:
+def clear_all_memory() -> None:
     pass

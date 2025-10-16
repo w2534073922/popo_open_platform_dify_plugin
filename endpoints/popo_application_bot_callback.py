@@ -104,12 +104,6 @@ class PopoBotToolEndpoint(Endpoint):
                 robot_event = dict_to_robot_event(callback_message)
                 popo_bot = PopoBot(plugin_settings.popo_app_key, plugin_settings.popo_app_secret)
 
-                if robot_event.event_data.notify == "@clean" or robot_event.event_data.notify == "清除记忆" or robot_event.event_data.notify == "/clean" or robot_event.event_data.notify == "\\clean":
-                    popo_bot.send_message(robot_event.event_data.from_,"重置对话流记忆，已开启新会话")
-                    popo_bot_memory.clear_memory(robot_event, plugin_settings)
-                    # 终止后续执行
-                    return Response(status=200)
-
                 if robot_event.event_type in (PopoEventType.IM_P2P_TO_ROBOT_MSG, PopoEventType.IM_CHAT_TO_ROBOT_AT_MSG):
                     # 私聊or群聊
                     if robot_event.event_type == PopoEventType.IM_P2P_TO_ROBOT_MSG:
@@ -120,6 +114,17 @@ class PopoBotToolEndpoint(Endpoint):
                             message_recipient = robot_event.event_data.to
                         else:
                             message_recipient = robot_event.event_data.from_
+
+                    # 清除记忆逻辑
+                    clean_commands = {"@clean", "@清除记忆"}
+                    notify_text = robot_event.event_data.notify.strip()
+                    is_clean_command = (notify_text in clean_commands or
+                                        any(notify_text.startswith(cmd) for cmd in clean_commands) or
+                                        any(notify_text.endswith(cmd) for cmd in clean_commands))
+                    if is_clean_command:
+                        popo_bot.send_message(message_recipient, "重置对话流记忆，已开启新会话")
+                        popo_bot_memory.clear_memory(robot_event, plugin_settings)
+                        return Response(status=200)
 
                     # 预回复消息
                     if plugin_settings.auto_reply_preset_message:
