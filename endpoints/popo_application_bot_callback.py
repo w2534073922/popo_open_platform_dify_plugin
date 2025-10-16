@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import traceback
 
 from dify_plugin.config.config import InstallMethod
@@ -21,6 +22,7 @@ from models.popo_bot_endpoint_settings_structures import PopoBotEndpointSettings
 # 日志，本地开发的使用用debug
 logger = logging.getLogger(__name__)
 if sys.platform in ('win32', 'cygwin', 'darwin'):
+    is_dev = True
     # 清空已有的handlers避免重复
     logger.handlers.clear()
     logger.setLevel(logging.DEBUG)
@@ -31,6 +33,7 @@ if sys.platform in ('win32', 'cygwin', 'darwin'):
     logger.addHandler(dev_handler)
     logger.propagate = False  # 防止日志向父级传播
 else:
+    is_dev = False
     logger.setLevel(logging.INFO)
     logger.addHandler(plugin_logger_handler)
 
@@ -48,6 +51,7 @@ class PopoBotToolEndpoint(Endpoint):
                     "备注": "端点连通性测试成功，插件使用方式请参考文档：https://docs.popo.netease.com/lingxi/4684e4335f894ab3a8a6b920adc71562"
                 }
                 result.update(plugin_settings.get_desensitized_settings())
+                logger.debug("连通性测试成功")
                 return Response(
                     json.dumps(result, ensure_ascii=False),
                     status=200,
@@ -129,12 +133,15 @@ class PopoBotToolEndpoint(Endpoint):
                     #     kwargs={
                     #         "plugin_settings": plugin_settings,
                     #         "robot_event": robot_event,
-                    #         "message_recipient":message_recipient
+                    #         "message_recipient":message_recipient,
+                    #         "popo_bot":popo_bot
                     #     }
                     # )
-                    # thread.start()
+                    #thread.start()
                     # 改成session提供的线程池执行
                     self.session._executor.submit(self.call_agent,plugin_settings,robot_event,message_recipient,popo_bot)
+                    # 阻塞，防止session失效
+                    time.sleep(1)
                 return Response(
                     status=200,
                 )
@@ -146,6 +153,7 @@ class PopoBotToolEndpoint(Endpoint):
                 )
         except Exception as e:
             logging.error(f"invoke执行异常: {str(e)}", exc_info=True)
+            # popo_bot.send_message(robot_event.event_data.from_,traceback.format_exc())
             return Response(
                 json.dumps({"status": "error", "message": "处理请求失败", "error": str(e),"detailed_error":{traceback.format_exc()}}, ensure_ascii=False),
                 status=500,
@@ -155,7 +163,6 @@ class PopoBotToolEndpoint(Endpoint):
     def call_agent(self, plugin_settings: PopoBotEndpointSettings, robot_event: RobotEvent,message_recipient: str,popo_bot: PopoBot):
         logger.debug("异步调用智能体开始执行")
         try:
-
             logger.debug(f"调用智能体参数 - app_id: {plugin_settings.agent_app_id}")
             inputs_param = {
                 "popo_input_message": robot_event.event_data.notify,
@@ -172,6 +179,7 @@ class PopoBotToolEndpoint(Endpoint):
             if plugin_settings.agent_type in (AgentType.CHAT, AgentType.CHATFLOW):
                 logger.debug("准备调用 chat.invoke")
                 memory = popo_bot_memory.get_popobot_memory(robot_event, plugin_settings)
+                logger.debug("没有找到记忆" if memory is None else "记忆："+str(memory.to_dict()))
                 response = self.session.app.chat.invoke(
                     app_id=plugin_settings.agent_app_id,
                     inputs=inputs_param,
