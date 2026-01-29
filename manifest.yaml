@@ -1,17 +1,13 @@
-version: 1.1.3
+version: 1.1.4
 type: plugin
 author: wangfeng
 name: popo_open_platform
 label:
-  en_US: popo_open_platform
-  ja_JP: popo_open_platform
-  zh_Hans: popo开放平台
-  pt_BR: popo_open_platform
+  en_US: POPO开放平台工具
+  zh_Hans: POPO开放平台工具
 description:
-  en_US: popo开放平台插件，可发送POPO消息。
-  ja_JP: popo开放平台插件，可发送POPO消息。
-  zh_Hans: popo开放平台插件，可发送POPO消息。
-  pt_BR: popo开放平台插件，可发送POPO消息。
+  en_US: popo开放平台工具，可让智能体向POPO发送消息。
+  zh_Hans: popo开放平台工具，可让智能体向POPO发送消息。
 icon: popo-tool.ico
 resource:
   memory: 268435456

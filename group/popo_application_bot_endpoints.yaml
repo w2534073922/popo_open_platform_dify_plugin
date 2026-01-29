@@ -5,7 +5,6 @@ settings:
     label:
       en_US: POPO机器人的appKey
       zh_Hans: POPO机器人的appKey
-      pt_BR: POPO机器人的appKey
     llm_description: 机器人的appKey
   - name: popo_app_secret
     type: text-input
@@ -13,7 +12,6 @@ settings:
     label:
       en_US: POPO机器人的appSecret
       zh_Hans: POPO机器人的appSecret
-      pt_BR: POPO机器人的appSecret
     llm_description: 机器人的appSecret
   - name: token
     type: text-input
@@ -21,22 +19,18 @@ settings:
     label:
       en_US: 机器人事件订阅的token
       zh_Hans: 机器人事件订阅的token
-      pt_BR: 机器人事件订阅的token
     placeholder:
       en_US: 请输入你的 POPO机器人token
       zh_Hans: 请输入你的 POPO机器人token
-      pt_BR: 请输入你的 POPO机器人token
   - name: aesKey
     type: text-input
     required: true
     label:
       en_US: 机器人事件订阅的aesKey
       zh_Hans: 机器人事件订阅的aesKey
-      pt_BR: 机器人事件订阅的aesKey
     placeholder:
-      en_US: 请输入你的 POPO机器人aesKey
-      zh_Hans: 请输入你的 POPO机器人aesKey
-      pt_BR: 请输入你的 POPO机器人aesKey
+      en_US: 请输入你的 POPO机器人aesKey（长度32位）
+      zh_Hans: 请输入你的 POPO机器人aesKey（长度32位）
   - name: agent
     type: app-selector
     required: true
@@ -44,11 +38,9 @@ settings:
     label:
       en_US: 处理消息的智能体
       zh_Hans: 处理消息的智能体
-      pt_BR: 处理消息的智能体
     placeholder:
       en_US: 销售档案解读大师
       zh_Hans: 销售档案解读大师
-      pt_BR: 销售档案解读大师
   - name: agent_type
     type: select
     required: true
@@ -68,22 +60,18 @@ settings:
     label:
       en_US: 应用类型（必须与绑定的智能体一致）
       zh_Hans: 应用类型（必须与绑定的智能体一致）
-      pt_BR: 应用类型（必须与绑定的智能体一致）
     placeholder:
       en_US: 对话流
       zh_Hans: 对话流
-      pt_BR: 对话流
   - name: auto_reply_preset_message
     type: text-input
     required: false
     label:
       en_US: 自动回复时一条预设消息（不填则无）
       zh_Hans: 自动回复一条预设消息（不填则无）
-      pt_BR: 自动回复一条预设消息（不填则无）
     placeholder:
       en_US: 示例：处理中，请稍等...
       zh_Hans: 示例：处理中，请稍等...
-      pt_BR: 示例：处理中，请稍等...
     llm_description: 自动回复时的预设消息，在智能体结果自动回复给popo之前先发送一条消息给用户
   - name: is_auto_reply
     type: boolean
@@ -92,7 +80,6 @@ settings:
     label:
         en_US: 机器人自动回复智能体执行结果
         zh_Hans: 机器人自动回复智能体执行结果
-        pt_BR: 机器人自动回复智能体执行结果
   - name: enable_memory
     type: boolean
     required: true
@@ -100,7 +87,6 @@ settings:
     label:
         en_US: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
         zh_Hans: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
-        pt_BR: 为对话流应用启用记忆功能（1小时未使用则清除记忆）
 #  - name: group_message_reply_method
 #    type: select
 #    required: false
@@ -116,11 +102,9 @@ settings:
 #    label:
 #      en_US: 收到群@时的回复方式
 #      zh_Hans: 收到群@时的回复方式
-#      pt_BR: 收到群@时的回复方式
 #    placeholder:
 #      en_US: 以私聊回复
 #      zh_Hans: 以私聊回复
-#      pt_BR: 以私聊回复
 
 #  - name: workflow_input_field
 #    type: text-input
@@ -129,11 +113,9 @@ settings:
 #    label:
 #      en_US: 工作流类型应用的输入字段
 #      zh_Hans: 工作流类型应用的输入字段
-#      pt_BR: 工作流类型应用的输入字段
 #    human_description:
 #      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 #      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-#      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 #  - name: workflow_output_field
 #    type: text-input
 #    required: false
@@ -141,11 +123,9 @@ settings:
 #    label:
 #      en_US: 工作流类型应用的输出字段
 #      zh_Hans: 工作流类型应用的输出字段
-#      pt_BR: 工作流类型应用的输出字段
 #    human_description:
 #      en_US: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 #      zh_Hans: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
-#      pt_BR: 由于工作流类型应用的输出字段是自定义的，需要指定字段名称
 
 #  - name: log_reporting_address
 #    type: text-input
@@ -153,22 +133,18 @@ settings:
 #    label:
 #      en_US: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
 #      zh_Hans: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
-#      pt_BR: 日志上报地址（可忽略，线上插件的运行日志将post到该地址）
 #    placeholder:
 #      en_US: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
 #      zh_Hans: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
-#      pt_BR: https://dev-log-jystudy.app.codewave.163.com/rest/addLog
 #  - name: sleep_time
 #    type: text-input
 #    required: false
 #    label:
 #      en_US: 主线程休眠时间（可忽略，调试用）
 #      zh_Hans: 主线程休眠时间（可忽略，调试用）
-#      pt_BR: 主线程休眠时间（可忽略，调试用）
 #    placeholder:
 #      en_US: "0"
 #      zh_Hans: "0"
-#      pt_BR: "0"
 
 endpoints:
   - endpoints/popo_application_bot_callback_GET.yaml
