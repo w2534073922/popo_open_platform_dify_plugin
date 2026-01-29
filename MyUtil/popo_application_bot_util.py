@@ -1,9 +1,9 @@
 import logging
 import re
-import sys
 from enum import Enum, auto
 import requests
 from cachetools import TTLCache, cached
+from cachetools.keys import hashkey
 
 class PopoMessageReceiverType(Enum):
     USER = auto()
@@ -11,7 +11,7 @@ class PopoMessageReceiverType(Enum):
 
 class PopoBot:
     # 类级别的缓存，所有实例共享，实现单例缓存效果
-    _token_cache = TTLCache(maxsize=200, ttl=21600)  # token缓存六个小时
+    _token_cache = TTLCache(maxsize=200, ttl=7200)  # token缓存六个小时
 
     def __init__(self, app_key, app_secret):
         self.appKey = app_key
@@ -20,7 +20,7 @@ class PopoBot:
     @classmethod
     @cached(_token_cache)  # 使用类级别的缓存
     def get_token(cls, app_key: str, app_secret: str) -> str:
-        """类方法，所有实例共享缓存"""
+
         body = {
             "appKey": app_key,
             "appSecret": app_secret
@@ -35,8 +35,17 @@ class PopoBot:
             raise ValueError(f"popo消息发送错误：获取token失败。errmsg：{errmsg}")
         return response.json().get("data").get("accessToken")
 
+    @classmethod
+    def clear_token_cache_for(cls, app_key: str, app_secret: str) -> None:
+        # 只清理指定 app_key/app_secret 的缓存
+        cache_key = hashkey(cls, app_key, app_secret)
+        try:
+            del cls._token_cache[cache_key]
+        except KeyError:
+            pass
+
     def validate_receiver(self, receiver: str) -> PopoMessageReceiverType:
-        """移到类内部作为实例方法"""
+
         email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$'
         group_pattern = r'^\d{5,10}$'
 
@@ -86,7 +95,19 @@ class PopoBot:
         )
         if response.status_code != 200 or response.json().get("errcode") != 0:
             errmsg = response.json().get("errmsg", "未收到错误信息")
-            raise ValueError(f"popo消息发送错误：发送消息失败。errmsg：{errmsg}")
+            if "access token expired" in str(errmsg).lower():
+                # 失效时清理对应 app_key 的缓存并重试一次
+                self.clear_token_cache_for(self.appKey, self.app_secret)
+                headers["Open-Access-Token"] = self.get_token(self.appKey, self.app_secret)
+                response2 = requests.post(
+                    "https://open.popo.netease.com/open-apis/robots/v1/im/send-msg",
+                    json=body,
+                    headers=headers,
+                    timeout=5
+                )
+                if response2.status_code != 200 or response2.json().get("errcode") != 0:
+                    errmsg = response2.json().get("errmsg", "未收到错误信息")
+                    raise ValueError(f"popo消息发送错误：发送消息失败。errmsg：{errmsg}")
 
 
 if __name__ == '__main__':

@@ -3,12 +3,9 @@ import logging
 import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict
 
 from dify_plugin.config.logger_format import plugin_logger_handler
-from dify_plugin.core.runtime import Session
-
-from models.popo_bot_endpoint_settings_structures import PopoBotEndpointSettings
 
 logger = logging.getLogger(__name__)
 if sys.platform in ('win32', 'cygwin', 'darwin'):

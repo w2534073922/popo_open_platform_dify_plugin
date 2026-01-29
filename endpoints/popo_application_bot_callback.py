@@ -10,7 +10,6 @@ from typing import Mapping
 
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
-import threading
 
 from MyUtil import popo_bot_memory
 from MyUtil.popo_application_bot_util import PopoBot
@@ -44,7 +43,6 @@ class PopoBotToolEndpoint(Endpoint):
         try:
             plugin_settings = PopoBotEndpointSettings(settings)
             logger.debug("进入_invoke回调")
-            self.session.storage.set("AAA","BBB".encode('utf-8'))
             # 非POPO回调时的连通性测试
             if not r.args:
                 result = {
