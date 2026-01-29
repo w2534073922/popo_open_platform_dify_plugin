@@ -4,11 +4,9 @@ identity:
   label:
     en_US: POPO开放平台工具
     zh_Hans: POPO开放平台工具
-    pt_BR: POPO开放平台工具
   description:
     en_US: wb.wangfeng07@mesg.corp.netease.com
     zh_Hans: wb.wangfeng07@mesg.corp.netease.com
-    pt_BR: wb.wangfeng07@mesg.corp.netease.com
   icon: popo-tool.ico
 tools:
   - tools/popo_application_bot.yaml

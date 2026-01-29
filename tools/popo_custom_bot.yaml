@@ -4,12 +4,10 @@ identity:
   label:
     en_US: 自定义机器人推送消息
     zh_Hans: 自定义机器人推送消息
-    pt_BR: 自定义机器人推送消息
 description:
   human:
     en_US: 调用自定义机器人发群消息。
     zh_Hans: 调用自定义机器人发群消息。
-    pt_BR: 调用自定义机器人发群消息。
   llm: 调用自定义机器人向群里发送通知
 parameters:
   - name: webhook_url
@@ -18,11 +16,9 @@ parameters:
     label:
       en_US: webhook地址
       zh_Hans: webhook地址
-      pt_BR: webhook地址
     human_description:
       en_US: 在popo群中添加机器人时获取
       zh_Hans: 在popo群中添加机器人时获取
-      pt_BR: 在popo群中添加机器人时获取
     llm_description: 机器人的webhook地址
     form: form
   - name: message
@@ -31,11 +27,9 @@ parameters:
     label:
       en_US: 消息内容
       zh_Hans: 消息内容
-      pt_BR: 消息内容
     human_description:
       en_US: 注意限制上游的输出长度，不得太长
       zh_Hans: 注意限制上游的输出长度，不得太长
-      pt_BR: 注意限制上游的输出长度，不得太长
     llm_description: 发送的消息内容
     form: llm
   - name: secret
@@ -44,11 +38,9 @@ parameters:
     label:
       en_US: 签名校验密钥
       zh_Hans: 签名校验密钥
-      pt_BR: 签名校验密钥
     human_description:
       en_US: 在popo群中添加机器人时获取
       zh_Hans: 在popo群中添加机器人时获取
-      pt_BR: 在popo群中添加机器人时获取
     llm_description: 机器人的secret
     form: form
   - name: auto_convert_markdown_image_link
@@ -58,11 +50,9 @@ parameters:
     label:
       en_US: 自动处理图片链接
       zh_Hans: 自动处理图片链接
-      pt_BR: 自动处理图片链接
     human_description:
       en_US: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
       zh_Hans: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
-      pt_BR: popo展示图片需要用特定格式：[img]http://a.com/png[/img]，而大模型输出的图片链接默认是markdown格式，启用该配置后会将markdown图片链接转换为popo所需的格式
     llm_description: 是否自动将markdown图片链接转换为发送消息所需的格式
     form: form
 extra:
